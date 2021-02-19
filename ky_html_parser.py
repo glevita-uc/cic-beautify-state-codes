@@ -62,9 +62,6 @@ class KyHtmlOperations:
                             prev_tag["id"] = f"t{self.title_id}c{chap_num}s{sec_num}-{count + 1}"
                             header_tag["id"] = f"t{self.title_id}c{chap_num}s{sec_num}-{count + 2}"
                         else:
-                            # prev_chap_num = re.search(r'^([^\.]+)', prev_tag.text).group().zfill(2)
-                            # prev_sec_num = re.search(r'^(\d+\.\d+)', prev_tag.text).group().zfill(2)
-                            # prev_tag["id"] = f"t{self.title_id}c{prev_chap_num}s{prev_sec_num}"
                             header_tag["id"] = f"t{self.title_id}c{chap_num}s{sec_num}"
 
             elif header_tag.get("class") == [self.class_regex["ul"]]:
