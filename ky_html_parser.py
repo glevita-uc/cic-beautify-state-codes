@@ -251,16 +251,17 @@ class KyHtmlOperations:
         self.set_appropriate_tag_name_and_id()
         self.create_ul_tag()
         self.create_chap_sec_nav()
+        self.wrap_with_ordered_tag()
         self.write_into_soup()
 
     # create a soup
     def create_soup(self):
-        with open("/home/mis/ky/gov.ky.krs.title.01.html") as fp:
+        with open("/home/mis/ky/gov.ky.krs.title.04.html") as fp:
             self.soup = BeautifulSoup(fp, "lxml")
 
     # write into a soup
     def write_into_soup(self):
-        with open("ky1.html", "w") as file:
+        with open("ky4.html", "w") as file:
             file.write(str(self.soup))
 
     # add css file
