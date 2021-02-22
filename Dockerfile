@@ -1,7 +1,7 @@
-From python:3.7
+From alpine:3.7
 
-#COPY ./requirement.txt/ pythonProject/requirement.txt
-COPY . /pythonProject
+COPY ./requirement.txt/ pythonProject/requirement.txt
+# COPY . /pythonProject
 
 
 WORKDIR /pythonProject
