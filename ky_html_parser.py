@@ -158,19 +158,22 @@ class KyHtmlOperations:
 
 
     # convert list items into ordered list
-    def wrap_with_ordered_tag(self):
-        pattern = re.compile(r'^(\d+)|^([(]\d+[)]|^[(]\D[)])')
+
+    def wrap_with_ordered_tag1(self):
+        pattern = re.compile(r'^(\d+)|^([(]\d+[)]|^[(]\D[)])|^(\D\.)')
         Num_bracket_pattern = re.compile(r'^\(\d+\)')
         alpha_pattern = re.compile(r'^\(\D+\)')
         # alp_pattern = re.compile(r'\(\D+\)')
         num_pattern = re.compile(r'^\d+')
-        num_pattern1 = re.compile(r'^1')
+        num_pattern1 = re.compile(r'^1\.')
         numAlpha_pattern = re.compile(r'^\(\d+\)\s\(\D+\)')
         alphanum_pattern = re.compile(r'^\(\D+\)\s(\d)+')
 
         ol_tag2 = self.soup.new_tag("ol", type="a")
         ol_tag = self.soup.new_tag("ol")
         ol_tag3 = self.soup.new_tag("ol")
+        ol_tag1 = self.soup.new_tag("ol")
+        ol_tag4 = self.soup.new_tag("ol", type="a")
 
         for tag in self.soup.findAll("p", class_=self.class_regex["ol"]):
             if re.match(pattern, tag.text.strip()):
@@ -191,13 +194,6 @@ class KyHtmlOperations:
                 elif a_int == 1:
                     ol_tag = self.soup.new_tag("ol")
                     tag.wrap(ol_tag)
-
-            # 1.......
-            if re.match(num_pattern, tag.text.strip()) and tag.find_previous().name == "span":
-                ol_tag = self.soup.new_tag("ol")
-                tag.wrap(ol_tag)
-            else:
-                ol_tag.append(tag)
 
             # (a).......
             pattern_new = re.compile(r'^\(a+\)')
@@ -230,9 +226,8 @@ class KyHtmlOperations:
                 elif re.match(num_pattern, tag.find_previous().text.strip()):
                     ol_tag2.append(tag)
 
-            # (a)1. .............
+            # (a)1..............
             if re.match(alphanum_pattern, tag.text.strip()):
-
                 ol_tag3 = self.soup.new_tag("ol")
                 li_tag = self.soup.new_tag("li")
                 li_tag.append(tag.text.strip())
@@ -244,6 +239,151 @@ class KyHtmlOperations:
             elif re.match(num_pattern, tag.text.strip()) and re.match(alphanum_pattern,
                                                                       tag.find_previous().text.strip()):
                 ol_tag3.append(tag)
+
+            # # 1.......
+            if re.match(num_pattern, tag.text.strip()):
+                if re.match(num_pattern1, tag.text.strip()):
+                    ol_tag1 = self.soup.new_tag("ol")
+                    tag.wrap(ol_tag1)
+                    tag.find_previous("li").append(ol_tag1)
+                else:
+
+                    ol_tag1.append(tag)
+
+            # a.......
+            pattern_a = re.compile(r'^(\D\.)')
+            if re.match(pattern_a, tag.text.strip()):
+
+                if re.match(r'^(a\.)', tag.text.strip()):
+                    ol_tag4 = self.soup.new_tag("ol", type="a")
+                    tag.wrap(ol_tag4)
+                    tag.find_previous("li").append(ol_tag4)
+
+                else:
+                    ol_tag4.append(tag)
+
+
+
+
+    def wrap_with_ordered_tag(self):
+        pattern = re.compile(r'^(\d+)|^([(]\d+[)]|^[(]\D[)])|^(\D\.)')
+        Num_bracket_pattern = re.compile(r'^\(\d+\)')
+        alpha_pattern = re.compile(r'^\(\D+\)')
+        # alp_pattern = re.compile(r'\(\D+\)')
+        num_pattern = re.compile(r'^\d+')
+        num_pattern1 = re.compile(r'^1\.')
+        numAlpha_pattern = re.compile(r'^\(\d+\)\s\(\D+\)')
+        alphanum_pattern = re.compile(r'^\(\D+\)\s(\d)+')
+
+        ol_tag2 = self.soup.new_tag("ol", type="a")
+        ol_tag = self.soup.new_tag("ol")
+        ol_tag3 = self.soup.new_tag("ol")
+        ol_tag1 = self.soup.new_tag("ol")
+        ol_tag4 = self.soup.new_tag("ol", type="a")
+
+
+
+        for tag in self.soup.findAll("p", class_=self.class_regex["ol"]):
+            if re.match(pattern, tag.text.strip()):
+                tag.name = "li"
+
+        for tag in self.soup.findAll("li", class_=self.class_regex["ol"]):
+
+            # (1)......
+            if re.match(Num_bracket_pattern, tag.text.strip()):
+                pattern1 = re.findall(r'^\(\d+\)', tag.text.strip())
+                index = re.findall(r'\d+', str(pattern1))
+                strings = [str(integer) for integer in index]
+                a_string = "".join(strings)
+                a_int = int(a_string)
+
+                if a_int > 1:
+                    ol_tag.append(tag)
+                elif a_int == 1:
+                    ol_tag = self.soup.new_tag("ol")
+                    tag.wrap(ol_tag)
+
+            # (a).......
+            pattern_new = re.compile(r'^\(a+\)')
+            if re.match(alpha_pattern, tag.text.strip()):
+                if re.match(pattern_new, tag.text.strip()):
+
+                    ol_tag2 = self.soup.new_tag("ol", type="a")
+                    tag.wrap(ol_tag2)
+                    ol_tag.append(ol_tag2)
+                    tag.find_previous("li").append(ol_tag2)
+
+                else:
+                    ol_tag2.append(tag)
+
+            # (1)(a)............
+            if re.match(numAlpha_pattern, tag.text.strip()):
+                ol_tag2 = self.soup.new_tag("ol", type="a")
+
+                li_tag = self.soup.new_tag("li")
+                li_tag.append(tag.text.strip())
+                ol_tag2.append(li_tag)
+                tag.contents = []
+                tag.append(ol_tag2)
+
+            elif re.match(alpha_pattern, tag.text.strip()):
+                if re.match(Num_bracket_pattern, tag.find_previous().text.strip()):
+                    ol_tag2.append(tag)
+                elif re.match(alpha_pattern, tag.find_previous().text.strip()):
+                    ol_tag2.append(tag)
+                elif re.match(num_pattern, tag.find_previous().text.strip()):
+                    ol_tag2.append(tag)
+
+            # (a)1..............
+            if re.match(alphanum_pattern, tag.text.strip()):
+                ol_tag3 = self.soup.new_tag("ol")
+                li_tag = self.soup.new_tag("li")
+                li_tag.append(tag.text.strip())
+                ol_tag3.append(li_tag)
+                ol_tag2.append(ol_tag3)
+                tag.contents = []
+                tag.append(ol_tag3)
+
+            elif re.match(num_pattern, tag.text.strip()) and re.match(alphanum_pattern,
+                                                                      tag.find_previous().text.strip()):
+                ol_tag3.append(tag)
+
+            # # 1.......
+            if re.match(num_pattern, tag.text.strip()):
+                if re.match(num_pattern1, tag.text.strip()):
+                    ol_tag1 = self.soup.new_tag("ol")
+                    tag.wrap(ol_tag1)
+                    tag.find_previous("li").append(ol_tag1)
+                else:
+
+                    ol_tag1.append(tag)
+
+            # a.......
+            pattern_a = re.compile(r'^(\D\.)')
+            if re.match(pattern_a, tag.text.strip()):
+
+                if re.match(r'^(a\.)', tag.text.strip()):
+                    ol_tag4 = self.soup.new_tag("ol", type="a")
+                    tag.wrap(ol_tag4)
+                    tag.find_previous("li").append(ol_tag4)
+
+                else:
+                    ol_tag4.append(tag)
+
+            # #(4)(a)1......
+            # num_alpha_num_pattern = re.compile(r'^\(\d+\)\s\(\D+\)\s\d\.')
+            # ol_tag5 = self.soup.new_tag("ol")
+            # if re.match(num_alpha_num_pattern, tag.text.strip()):
+            #     print(tag)
+            #     ol_tag5 = self.soup.new_tag("ol")
+            #     tag.wrap(ol_tag5)
+            #     tag.find_previous("li").append(ol_tag5)
+            # elif re.match(num_pattern, tag.text.strip()) and re.match(num_alpha_num_pattern,tag.find_previous().text.strip()):
+            #     ol_tag5.append(tag)
+
+
+
+
 
     # main method
     def start(self):
