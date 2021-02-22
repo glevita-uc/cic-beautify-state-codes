@@ -63,6 +63,8 @@ class KyHtmlOperations:
                             header_tag["id"] = f"t{self.title_id}c{chap_num}s{sec_num}-{count + 2}"
                         else:
                             header_tag["id"] = f"t{self.title_id}c{chap_num}s{sec_num}"
+                    else:
+                        header_tag["id"] = f"t{self.title_id}c{chap_num}s{sec_num}"
 
             elif header_tag.get("class") == [self.class_regex["ul"]]:
                 header_tag.name = "li"
