@@ -145,13 +145,17 @@ class KyHtmlOperations:
                                 list_item.contents = nav_list
 
                 else:
+                    chapter_header = list_item.find_previous("h2")
+                    chap_nums = re.search(r'(\s+[^\s]+)', chapter_header.text).group(0)
+                    chap_num = re.sub(r'\s+', '', chap_nums).zfill(2)
                     sec_id = re.sub(r'\s+', '', list_item.get_text()).lower()
                     new_list = []
                     new_link = self.soup.new_tag('a')
                     new_link.string = list_item.text
-                    new_link["href"] = f"#t{self.title_id}c{chap_nums}{sec_id}"
+                    new_link["href"] = f"#t{self.title_id}c{chap_num}{sec_id}"
                     new_list.append(new_link)
                     list_item.contents = new_list
+
 
     # convert list items into ordered list
     def wrap_with_ordered_tag(self):
