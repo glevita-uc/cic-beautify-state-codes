@@ -406,7 +406,7 @@ class KyHtmlOperations:
 
     # write into a soup
     def write_into_soup(self):
-        with open("ky2.html", "w") as file:
+        with open("files/ky2.html", "w") as file:
             file.write(str(self.soup))
 
 
