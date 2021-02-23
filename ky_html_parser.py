@@ -370,17 +370,6 @@ class KyHtmlOperations:
                 else:
                     ol_tag4.append(tag)
 
-            # #(4)(a)1......
-            # num_alpha_num_pattern = re.compile(r'^\(\d+\)\s\(\D+\)\s\d\.')
-            # ol_tag5 = self.soup.new_tag("ol")
-            # if re.match(num_alpha_num_pattern, tag.text.strip()):
-            #     print(tag)
-            #     ol_tag5 = self.soup.new_tag("ol")
-            #     tag.wrap(ol_tag5)
-            #     tag.find_previous("li").append(ol_tag5)
-            # elif re.match(num_pattern, tag.text.strip()) and re.match(num_alpha_num_pattern,tag.find_previous().text.strip()):
-            #     ol_tag5.append(tag)
-
 
 
 
@@ -400,12 +389,12 @@ class KyHtmlOperations:
 
     # create a soup
     def create_soup(self):
-        with open("/home/mis/ky/gov.ky.krs.title.04.html") as fp:
+        with open("/home/mis/ky/gov.ky.krs.title.02.html") as fp:
             self.soup = BeautifulSoup(fp, "lxml")
 
     # write into a soup
     def write_into_soup(self):
-        with open("ky4.html", "w") as file:
+        with open("ky2.html", "w") as file:
             file.write(str(self.soup))
 
     # add css file
