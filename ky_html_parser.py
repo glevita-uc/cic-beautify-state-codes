@@ -270,7 +270,7 @@ class KyHtmlOperations:
     # main method
     def start(self):
         self.create_soup()
-        self.Css_file()
+        self.css_file()
         self.get_class_names()  # assign id to the li
         self.clear_junk()
         self.create_main_tag()
@@ -291,7 +291,7 @@ class KyHtmlOperations:
             file.write(str(self.soup))
 
     # add css file
-    def Css_file(self):
+    def css_file(self):
         head = self.soup.find("head")
         style = self.soup.head.find("style")
         style.decompose()
