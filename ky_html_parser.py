@@ -160,7 +160,7 @@ class KyHtmlOperations:
     # convert list items into ordered list
     def wrap_with_ordered_tag(self):
         pattern = re.compile(r'^(\d+)|^([(]\d+[)]|^[(]\D[)])|^(\D\.)')
-        Num_bracket_pattern = re.compile(r'^\(\d+\)')
+        num_bracket_pattern = re.compile(r'^\(\d+\)')
         alpha_pattern = re.compile(r'^\(\D+\)')
         # alp_pattern = re.compile(r'\(\D+\)')
         num_pattern = re.compile(r'^\d+')
@@ -183,7 +183,7 @@ class KyHtmlOperations:
         for tag in self.soup.findAll("li", class_=self.class_regex["ol"]):
 
             # (1)......
-            if re.match(Num_bracket_pattern, tag.text.strip()):
+            if re.match(num_bracket_pattern, tag.text.strip()):
                 pattern1 = re.findall(r'^\(\d+\)', tag.text.strip())
                 index = re.findall(r'\d+', str(pattern1))
                 strings = [str(integer) for integer in index]
@@ -220,7 +220,7 @@ class KyHtmlOperations:
                 tag.append(ol_tag2)
 
             elif re.match(alpha_pattern, tag.text.strip()):
-                if re.match(Num_bracket_pattern, tag.find_previous().text.strip()):
+                if re.match(num_bracket_pattern, tag.find_previous().text.strip()):
                     ol_tag2.append(tag)
                 elif re.match(alpha_pattern, tag.find_previous().text.strip()):
                     ol_tag2.append(tag)
